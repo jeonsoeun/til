@@ -1,3 +1,4 @@
+# GitLab CI/CD로 AWS의 S3/CloudFront에 배포
 공식 문서: [https://docs.gitlab.com/ee/ci/cloud_deployment/](https://docs.gitlab.com/ee/ci/cloud_deployment/)
 ## 준비물
 - aws access key과 secret key

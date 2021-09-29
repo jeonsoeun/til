@@ -1,6 +1,7 @@
 <!-- @format -->
 
-#position
+# position
+
 css position속성에 대해 새롭게 알게된 것들
 
 ## position:sticky
