@@ -10,6 +10,10 @@
 
 - [Variables](img/variables.png)
 
+### build
+
+- [Manifest](build/manifest.md)
+
 ### command
 
 - [주소_열려있는지_확인](command/주소_열려있는지_확인.md)
