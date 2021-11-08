@@ -18,6 +18,10 @@
 
 - [Position](css/position.md)
 
+### js
+
+- [Array](js/Array.reducer.md)
+
 ### kubernetes
 
 - [Crashloopbackoff](kubernetes/CrashLoopBackOff.md)
