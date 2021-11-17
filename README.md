@@ -32,5 +32,7 @@
 
 ### kubernetes
 
+- [Delete Pod](kubernetes/Delete-Pod.md)
 - [Crashloopbackoff](kubernetes/CrashLoopBackOff.md)
+- [K9s](kubernetes/k9s.md)
 
