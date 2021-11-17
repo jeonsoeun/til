@@ -22,6 +22,10 @@
 
 - [Position](css/position.md)
 
+### html
+
+- [Meta X Ua Compatible](html/meta-X-UA-Compatible.md)
+
 ### js
 
 - [Array](js/Array.reducer.md)
