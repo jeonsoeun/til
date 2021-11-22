@@ -12,6 +12,7 @@
 
 ### build
 
+- [Gulp](build/gulp.md)
 - [Manifest](build/manifest.md)
 
 ### command
