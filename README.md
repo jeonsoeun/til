@@ -14,6 +14,17 @@
 
 - [Variables](img/variables.png)
 
+### IDE
+
+- [Fonts](IDE/fonts.md)
+
+### React
+
+
+### Library
+
+- [Swr](Library/SWR.md)
+
 ### build
 
 - [Gulp](build/gulp.md)
@@ -40,4 +51,8 @@
 - [Delete Pod](kubernetes/Delete-Pod.md)
 - [Crashloopbackoff](kubernetes/CrashLoopBackOff.md)
 - [K9s](kubernetes/k9s.md)
+
+### mono-repo
+
+- [Lerna](mono-repo/lerna.md)
 
