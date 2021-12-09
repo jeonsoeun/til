@@ -2,62 +2,62 @@
 > Today I Learned
 매일 배운 것들을 간단하게 정리
 ---
-######### Backbone
+## Backbone
 
 - [Save](Backbone/save.md)
 
-###### CI&CD
+## CI&CD
 
 - [Gitlab_ci_cd로_aws(s3_cf)배포](CI&CD/gitLab_ci_cd로_aws(s3_cf)배포.md)
 
-########## img
+### img
 
 - [Variables](img/variables.png)
 
-#### IDE
+## IDE
 
 - [Fonts](IDE/fonts.md)
 
-###### React
+## React
 
 
-############## Library
+### Library
 
 - [Swr](Library/SWR.md)
 
-####################### create-react-app
+### create-react-app
 
 - [Public_url](create-react-app/PUBLIC_URL.md)
 - [React Cra Public_url](create-react-app/react-cra-public_url.png)
 
-###### build
+## build
 
 - [Gulp](build/gulp.md)
 - [Manifest](build/manifest.md)
 
-######## command
+## command
 
 - [주소_열려있는지_확인](command/주소_열려있는지_확인.md)
 
-#### css
+## css
 
 - [Position](css/position.md)
 
-##### html
+## html
 
 - [Meta X Ua Compatible](html/meta-X-UA-Compatible.md)
 
-### js
+## js
 
 - [Array](js/Array.reducer.md)
 
-########### kubernetes
+## kubernetes
 
 - [K9s](kubernetes/k9s.md)
 - [Delete Pod](kubernetes/Delete-Pod.md)
 - [Crashloopbackoff](kubernetes/CrashLoopBackOff.md)
 
-########## mono-repo
+## mono-repo
 
 - [Lerna](mono-repo/lerna.md)
 
