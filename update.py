@@ -23,10 +23,13 @@ def main():
                 except ValueError:
                     pass
             continue
-
+        path = (os.path.normpath(root)).split("/")
+        titleLevel = "#"
+        for p in path:
+            titleLevel += "#"
         category = os.path.basename(root)
 
-        content += "### {}\n\n".format(category)
+        content += (titleLevel + " {}\n\n").format(category)
 
         for file in files:
             name = os.path.basename(file).split('.')[0]
