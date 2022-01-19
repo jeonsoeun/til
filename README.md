@@ -24,6 +24,7 @@
 ### Library
 
 - [Swr](Library/SWR.md)
+- [Svgr](Library/SVGR.md)
 
 ### create-react-app
 
