@@ -10,8 +10,11 @@ Create React App으로 App 제작시 react router의 path가 2개 이상일때 �
 > https://stackoverflow.com/questions/54340240/create-react-app-build-uncaught-syntaxerror-unexpected-token
 
 ### TL;DR
-package.json에 homepage 옵션을 줬다면 뺀다.
+package.json에 homepage 옵션을 수정하거나(`homepage: '.'` 또는 `homepage: '페이지 주소'`) 삭제한다.   
+참고사항: https://create-react-app.dev/docs/deployment/#building-for-relative-paths
 
 ## 원인 
-react는 client side rendering(CSR)이다. (Nextjs 같이 Server side rendering(SSR)용 react도 있고 react 18에서는 SSR도 지원할거같지만 이건 논외로 치고..). react-router가 동작하는 방식은 경로 변경이 일어났을때 페이지 이동을 막고 우리가 그 경로에 연결해둔 화면을 보여주는것 뿐이다.  그러기 위해서는 build했을 때 생성된 `index.html`을 열어서 거기에 넣어놓은 `main.js`를 실행시켜 react를 실행시켜야한다. 그런데 **서버는 이 사실을 모른다**. 그래서 `localhost:3000/info/1` 이런 경로에 바로 접속했을때 `localhost:3000`에 있는 index.html을 연결을 못해주는것이다!  
-해결법은 1) 서버 옵션에서 기본으로 항상 index.html 을 호출하도록 한다. 2) Creact react app으로 만들었을시에는 package.json에서 homepage옵션을 변경한다.
+homepage 옵션을 잘못줘서 정적 파일 경로가 잘못되었다. chunkFile을 html로 인식해서 생긴 이슈라고 한다.
+
+## 왜 해결되나..?
+내가 package.json의 homepage옵션을 `homepage: './'` 이렇게 주었기 때문에 경로가 잘못 설정된것으로 추청된다.  `homepage: '.'`을 하면 build시에 `The project was built assuming it is hosted at /.`이라고 나타나는데 이게 잘못되어 있던 것으로 추측된다. 왜 추측이냐면.. 지금 뭐가 문제인지 `homepage` 옵션을 바꿔도 적용이 되지 않는다..;;
