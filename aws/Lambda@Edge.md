@@ -21,3 +21,15 @@ OG(Open Graph) 설정이 필요했고, react-helmet -> react-snap 을 시도 해
 react-snap을 사용하는 대신 직접 만들어 줄까 생각해보긴 했지만, 이건 이후에 확장성을 고려하면 최악의 선택지이다.
 #### Lambda@Edge
 페이지가 s3/cloudfront에 올라가있기 때문에 **Lambda@Edge**라는 선택지가 있었다. (처음엔 전혀 생각 못하다가 팀장님이 말해주셔서 찾아봤다.) Lambda@Edge는
+
+### 참고자료
+#### 큰도움
+- https://docs.aws.amazon.com/ko_kr/AmazonCloudFront/latest/DeveloperGuide/lambda-event-structure.html
+- https://blog.roto.codes/odc-tech-stack-aws-lambda-edge/ (제일 큰도움ㅠ 하단에 디버깅의 어려움 부분 덕분에 로그를 볼 수 있었습니다.)
+- https://velog.io/@alvin/AWS-LambdaEdge%EB%A1%9C-CSR-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-SEO-%EC%B2%98%EB%A6%AC%ED%95%98%EA%B8%B0
+- https://uzihoon.com/post/8f203610-8e67-11ea-925d-abc1dfcb23bd
+- https://velog.io/@alvin/AWS-LambdaEdge%EB%A1%9C-CSR-%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-SEO-%EC%B2%98%EB%A6%AC%ED%95%98%EA%B8%B0
+
+#### 중간도움
+- https://docs.aws.amazon.com/ko_kr/lambda/latest/dg/lambda-edge.html (다른 글들에 있는 설명의 원조격)
+- https://docs.aws.amazon.com/ko_kr/AmazonCloudFront/latest/DeveloperGuide/lambda-examples.html
