@@ -28,11 +28,11 @@ Html의 <head>에 <meta>를 추가해서 표현할 수 있다.
 <html>
   <head>
     ...
-    <meta property="og:title" content="PRACOON BLOG" />
+    <meta property="og:title" content="MY BLOG" />
     <meta property="og:description" content="My small space for memorizing anything" />
-    <meta property="og:image" content="[MY_TITLE]" />
-    <meta property="og:url" content="[MY_TITLE]" />
-    <meta property="og:type" content="[MY_TITLE]" />
+    <meta property="og:image" content="https://...." />
+    <meta property="og:url" content="https://...." />
+    <meta property="og:type" content="website" />
     ...
   </head>
   <body>
@@ -49,8 +49,9 @@ Html의 <head>에 <meta>를 추가해서 표현할 수 있다.
 - Viewer Request는 항상 실행되니까 실행될 함수를 줄이기 위해서였다.
 - <sub>[[2]](#case2)</sub>의 header기반 캐싱법을 늦게 발견했다.
 그래서 나는 봇이든 일반 사용자든 들어왔을때 상관없이 같은 값을 보여주는 방향으로 잡았다.  
-방법은 다음과 같다.
-1. 원하는 경로만 OG(OpenGraph)값을 바꾸고 싶다. 요청이 들어오면 ②`Origin Response`에서 
+방법은 다음과 같다. (S3, CloudFront 설정이 되어있고, build된 파일이 올라가있다고 가정한다.)
+1. 먼저 S3의 웹페이지 루트 경로에 ogCon
+2. 원하는 경로만 OG(OpenGraph)값을 바꾸고 싶다. 요청이 들어오면 ②`Origin Response`에서 request.
 
 ### 팁
 - 작성시점 기준(2022.02.16) Lambda@Edge는 버지니아 북부 리전에서만 사용 가능하다. 근데 cloudwatch에서 실행된 함수의 로그는 cloudwatch를 호출한 리전에 남아있다!! 이걸 몰라서 한동안 업로드 시점의 로그만 보고 하고 있었다.
@@ -82,3 +83,7 @@ react-snap을 사용하는 대신 직접 만들어 줄까 생각해보긴 했지
 - [같은 상황에 대한 내용3](https://ninpeng.tistory.com/3) <a name="case1">[1]</a>
 - [다른 글들에 있는 람다엣지 설명의 원조격](https://docs.aws.amazon.com/ko_kr/lambda/latest/dg/lambda-edge.html )
 - [공식 페이지의 람다엣지 예제](https://docs.aws.amazon.com/ko_kr/AmazonCloudFront/latest/DeveloperGuide/lambda-examples.html)
+
+#### 관련 참고
+- [Lambda 비용 계산](https://calculator.aws/#/createCalculator/Lambda) (백만건으로 쳤을때 13.10USD 정도로 보인다.)
+- [Lambda 비용 설명](https://aws.amazon.com/ko/lambda/pricing/#Lambda.40Edge_Pricing)
