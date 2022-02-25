@@ -48,6 +48,7 @@
 
 ## aws
 
+- [Cloudfront Events That Trigger Lambda Functions](aws/cloudfront-events-that-trigger-lambda-functions.png)
 - [Lambda@edge](aws/Lambda@Edge.md)
 
 ## build
