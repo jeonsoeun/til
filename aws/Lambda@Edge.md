@@ -96,12 +96,210 @@ Html의 <head>에 <meta>를 추가해서 표현할 수 있다.
     }
     const configJSON = JSON.parse(configStr);
     ```
-3. 위에서 가져온 ogConfig.json이 있으면, request.uri에 해당하는 옵션이 있는지 찾는다. request.uri가 위에 예시로 든 ogConfig.json의
-ex) 
+3. 위에서 가져온 ogConfig.json이 있으면, request uri에 해당하는 옵션이 있는지 찾는다. ex) `JSON.parse()`해서 `config`변수에 넣고 `config[request.uri]`가 있는지 없는지 검사한다.
+    ```javascript
+    try {
+    const configObj = await s3.getObject(configParam).promise();
+    configStr = configObj?.Body;
+  } catch (err) {
+    ...
+  }
+  const configJSON = JSON.parse(configStr);
+  if (configStr) {
+    // uri에서 path 분리하기.
+    const match = uri.replace(/https:\/\/(\w|\.)+/g, ""); // protocol, host 제거.
+    const path = match ? match.split("?")[0] : ""; // search param 제거
+    console.log("PATH:" + path);
+
+    ...
+
+    // ogConfig.json에 해당 경로가 있는지 확인.
+    if (path && configJSON[path]) { ... }
+    
+    ...
+
+    ```
+4. request uri에 해당하는 옵션이 있으면 기존 `index.html`을 S3에서 가져와서 옵션값으로 OG데이터를 변경해준다.
+    ```javascript
+    // 원본 html 가져오기
+    const rootHtmlParam = {
+      Bucket: BUCKET_NAME,
+      Key: `index.html`,
+    };
+    const rootHtmlObj = await s3
+      .getObject(rootHtmlParam, (err, data) => {
+        ...
+        }
+      })
+      .promise();
+    if (rootHtmlObj?.Body) {
+      // 기존 /index.html의 og tag들을 수정
+      const rootHtmlStr = rootHtmlObj?.Body.toString("utf-8");
+      let newHtmlStr = rootHtmlStr;
+      if (config["og:image"]) {
+        newHtmlStr = newHtmlStr.replace(
+          /(?<=<meta property=\"og:image\" content=\"https:\/\/\S+)\/\S+?(?=\")/,
+          config["og:image"]
+        ).replace(
+          /(?<=<meta name=\"twitter:image\" content=\"https:\/\/\S+)\/\S+?(?=\")/,
+          config["og:image"]
+        );
+      }
+      /** 이런식으로 정규표현식과 replace를 이용해서 원하는 값들을 변경을 해줬다. */
+      /** image, title, description, url */
+      ...
+    }
+    ```
+5. 새로 설정된 html을 response해준다.
+    ```javascript
+    return {
+      status: 200,
+      statusCode: 200,
+      body: newHtmlStr,
+      headers: {
+        "Content-Type": [
+          {
+            key: "Content-Type",
+            value: "text/html",
+          },
+        ],
+      },
+    };
+    ```
+### 전체 코드
+```javascript
+// 페북, 카카오, 구글 확인 완료.
+const aws = require("aws-sdk");
+
+exports.handler = async (event, context, callback) => {
+  const BUCKET_NAME = "pracoon-www";
+  let { request } = event.Records[0].cf;
+  const { uri } = request || {};
+  const s3 = new aws.S3({
+    region: "ap-northeast-2",
+  });
+  // ogConfig.json 파일 읽어오기
+  const configParam = {
+    Bucket: BUCKET_NAME,
+    Key: `ogConfig.json`,
+  };
+  let configStr = "";
+  try {
+    const configObj = await s3.getObject(configParam).promise();
+    configStr = configObj?.Body;
+  } catch (err) {
+    console.log("CONFIG OBJ ERROR: " + err);
+    callback(null, request);
+    return;
+  }
+  const configJSON = JSON.parse(configStr);
+  console.log("CONFIG STR" + configStr);
+  if (configStr) {
+    // uri에서 path 분리하기.
+    const match = uri.replace(/https:\/\/(\w|\.)+/g, ""); // protocol, host 제거.
+    const path = match ? match.split("?")[0] : ""; // search param 제거
+    console.log("PATH:" + path);
+    if (!path || !path[0]) {
+      console.log("NOT EVENT URL");
+      callback(null, request);
+      return;
+    }
+    // 파일을 호출하면 callback호출후 return
+    const isFileUri = /(\.\w+)$/.test(path);
+    if (isFileUri) {
+      console.log("FILE URI: " + path);
+      callback(null, request);
+      return;
+    }
+    // ogConfig.json에 해당 경로가 있는지 확인.
+    if (path && configJSON[path]) {
+      const config = configJSON[path];
+      // 원본 html 가져오기
+      const rootHtmlParam = {
+        Bucket: BUCKET_NAME,
+        Key: `index.html`,
+      };
+      const rootHtmlObj = await s3
+        .getObject(rootHtmlParam, (err, data) => {
+          if (err) {
+            console.error("ERR ROOT HTML:" + err);
+          } else {
+            console.log("ROOT HTML LOADED");
+          }
+        })
+        .promise();
+      if (rootHtmlObj?.Body) {
+        // 기존 /index.html의 og tag들을 수정
+        const rootHtmlStr = rootHtmlObj?.Body.toString("utf-8");
+        let newHtmlStr = rootHtmlStr;
+        if (config["og:image"]) {
+          newHtmlStr = newHtmlStr.replace(
+            /(?<=<meta property=\"og:image\" content=\"https:\/\/\S+)\/\S+?(?=\")/,
+            config["og:image"]
+          ).replace(
+            /(?<=<meta name=\"twitter:image\" content=\"https:\/\/\S+)\/\S+?(?=\")/,
+            config["og:image"]
+          );
+        }
+        if (config["og:title"]) {
+          newHtmlStr = newHtmlStr.replace(
+            /(?<=<meta property=\"og:title\" content=\").+?(?=\")/,
+            config["og:title"]
+          ).replace(
+            /(?<=<meta name=\"twitter:title\" content=\").+?(?=\")/,
+            config["og:title"]
+          );
+        }
+        if (config["og:description"]) {
+          newHtmlStr = newHtmlStr.replace(
+            /(?<=<meta property=\"og:description\" content=\").+?(?=\")/,
+            config["og:description"]
+          ).replace(
+            /(?<=<meta name=\"twitter:description\" content=\").+?(?=\")/,
+            config["og:description"]
+          );
+        }
+        if (config["og:url"]) {
+          newHtmlStr = newHtmlStr.replace(
+            /(?<=<meta property=\"og:url\" content=\")\S+?(?=\")/,
+            config["og:url"]
+          );
+        }
+        if (config["title"]) {
+          newHtmlStr = newHtmlStr.replace(
+            /(?<=<title>).+?(?=<\/title>)/,
+            config["title"]
+          );
+        }
+        console.log('NEW HTML CREATED')
+        return {
+          status: 200,
+          statusCode: 200,
+          body: newHtmlStr,
+          headers: {
+            "Content-Type": [
+              {
+                key: "Content-Type",
+                value: "text/html",
+              },
+            ],
+          },
+        };
+      } else {
+        console.log('NO ROOT HTML')
+      }
+    } else {
+      console.log('ogConfig.json NOT EXIST')
+    }
+  }
+  callback(null, request);
+};
+
+```
 ---
 ### 팁
 
-- 작성시점 기준(2022.02.16) Lambda@Edge는 버지니아 북부 리전에서만 사용 가능하다. 근데 cloudwatch에서 실행된 함수의 로그는 cloudwatch를 호출한 리전에 남아있다!! 이걸 몰라서 한동안 업로드 시점의 로그만 보고 하고 있었다.
+- 작성시점 기준(2022.02.16) Lambda@Edge는 버지니아 북부 리전(us-east-1)에서만 사용 가능하다. 근데 cloudwatch에서 실행된 함수의 로그는 cloudwatch를 호출한 리전에 남아있다!! 이걸 몰라서 한동안 업로드 시점의 로그만 보고 하고 있었다. 업로드한 Lambda@Edge의 로그를 보고싶다면, cloudwatch에서 버지니아 북부 리전(us-east-1)을 열었는지 꼭 확인하자.
 - facebook과 카카오톡은 og:url경로의 데이터를 불러오는 모양이다. facebook이랑 카톡은 안되고 구글 행아웃은 되길래 도대체 왜이러지 했는데 og:url도 원하는 경로로 바꿔주니까 바로 된다. 덕분에 하루종일 삽질을 했다.
 
 ---
