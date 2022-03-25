@@ -48,7 +48,11 @@
 
 ## aws
 
+- [S3 Staic Hosting 3](aws/s3-staic-hosting-3.png)
 - [Cloudfront Events That Trigger Lambda Functions](aws/cloudfront-events-that-trigger-lambda-functions.png)
+- [S3 Staic Hosting 2](aws/s3-staic-hosting-2.png)
+- [S3 Static Hosting](aws/S3-static-hosting.md)
+- [S3 Staic Hosting 1](aws/s3-staic-hosting-1.png)
 - [Lambda@edge](aws/Lambda@Edge.md)
 
 ## build
